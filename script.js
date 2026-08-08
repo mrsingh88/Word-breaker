@@ -1,279 +1,20 @@
 // ============================================
 // WORD BREAKER
+// Datamuse API Edition
 // ============================================
 
 
-// --------------------------------------------
-// WORD LIST
-// --------------------------------------------
+// ============================================
+// API
+// ============================================
 
-// 5-letter words
-
-const words5 = [
-
-    "apple",
-    "brave",
-    "bread",
-    "chair",
-    "cloud",
-    "dance",
-    "dream",
-    "eagle",
-    "earth",
-    "flame",
-    "glass",
-    "grape",
-    "green",
-    "heart",
-    "house",
-    "light",
-    "money",
-    "music",
-    "ocean",
-    "party",
-    "peace",
-    "phone",
-    "plant",
-    "queen",
-    "quick",
-    "river",
-    "robot",
-    "round",
-    "school",
-    "shine",
-    "smart",
-    "smile",
-    "snake",
-    "sound",
-    "space",
-    "sport",
-    "storm",
-    "table",
-    "tiger",
-    "train",
-    "water",
-    "world",
-    "write",
-    "young",
-    "zebra",
-    "brain",
-    "break",
-    "build",
-    "carry",
-    "catch",
-    "clean",
-    "clear",
-    "close",
-    "count",
-    "cover",
-    "daily",
-    "early",
-    "enjoy",
-    "every",
-    "field",
-    "final",
-    "first",
-    "focus",
-    "fresh",
-    "front",
-    "fruit",
-    "great",
-    "group",
-    "happy",
-    "horse",
-    "image",
-    "judge",
-    "learn",
-    "level",
-    "lunch",
-    "major",
-    "match",
-    "maybe",
-    "model",
-    "month",
-    "night",
-    "north",
-    "offer",
-    "order",
-    "paper",
-    "place",
-    "point",
-    "power",
-    "price",
-    "proud",
-    "radio",
-    "raise",
-    "reach",
-    "ready",
-    "right",
-    "river",
-    "share",
-    "short",
-    "small",
-    "start",
-    "state",
-    "story",
-    "study",
-    "teach",
-    "thing",
-    "think",
-    "today",
-    "touch",
-    "trade",
-    "trust",
-    "under",
-    "value",
-    "voice",
-    "watch",
-    "white",
-    "whole",
-    "woman",
-    "worry",
-    "wrong"
-];
+const API_URL =
+    "https://api.datamuse.com/words";
 
 
-// 6-letter words
-
-const words6 = [
-
-    "animal",
-    "answer",
-    "artist",
-    "banana",
-    "beauty",
-    "better",
-    "border",
-    "bright",
-    "button",
-    "camera",
-    "career",
-    "change",
-    "choice",
-    "circle",
-    "coffee",
-    "common",
-    "danger",
-    "design",
-    "doctor",
-    "effect",
-    "energy",
-    "engine",
-    "enough",
-    "family",
-    "father",
-    "flower",
-    "forest",
-    "friend",
-    "future",
-    "garden",
-    "golden",
-    "growth",
-    "happen",
-    "health",
-    "honest",
-    "inside",
-    "island",
-    "jacket",
-    "jungle",
-    "little",
-    "market",
-    "master",
-    "minute",
-    "mother",
-    "nature",
-    "number",
-    "office",
-    "orange",
-    "people",
-    "planet",
-    "player",
-    "please",
-    "pocket",
-    "purple",
-    "rabbit",
-    "random",
-    "reason",
-    "result",
-    "school",
-    "secret",
-    "simple",
-    "silver",
-    "sister",
-    "smooth",
-    "soccer",
-    "source",
-    "speech",
-    "spring",
-    "street",
-    "strong",
-    "summer",
-    "system",
-    "target",
-    "teacher",
-    "travel",
-    "treaty",
-    "useful",
-    "valley",
-    "winter",
-    "wonder",
-    "yellow",
-    "zephyr",
-    "almost",
-    "always",
-    "around",
-    "before",
-    "behind",
-    "better",
-    "broken",
-    "called",
-    "center",
-    "chance",
-    "choose",
-    "coming",
-    "create",
-    "during",
-    "either",
-    "family",
-    "follow",
-    "ground",
-    "having",
-    "hidden",
-    "impact",
-    "important",
-    "listen",
-    "lovely",
-    "memory",
-    "moment",
-    "moving",
-    "normal",
-    "notice",
-    "parent",
-    "perfect",
-    "person",
-    "problem",
-    "public",
-    "really",
-    "school",
-    "should",
-    "single",
-    "special",
-    "spirit",
-    "square",
-    "success",
-    "thanks",
-    "though",
-    "toward",
-    "unique",
-    "unless",
-    "wanted",
-    "wonder"
-];
-
-
-// --------------------------------------------
+// ============================================
 // HTML ELEMENTS
-// --------------------------------------------
+// ============================================
 
 const gameBoard =
     document.getElementById("gameBoard");
@@ -293,6 +34,9 @@ const message =
 const newGameBtn =
     document.getElementById("newGameBtn");
 
+const loading =
+    document.getElementById("loading");
+
 const gamesPlayedDisplay =
     document.getElementById("gamesPlayed");
 
@@ -306,11 +50,9 @@ const streakDisplay =
     document.getElementById("streak");
 
 
-// --------------------------------------------
-// GAME VARIABLES
-// --------------------------------------------
-
-let secretWord = "";
+// ============================================
+// GAME STATE
+// ============================================
 
 let wordLength = 5;
 
@@ -320,12 +62,23 @@ let currentAttempt = 0;
 
 let currentGuess = "";
 
+let secretWord = "";
+
 let gameOver = false;
 
 
-// --------------------------------------------
+// ============================================
+// WORD CACHE
+// ============================================
+
+let words5 = [];
+
+let words6 = [];
+
+
+// ============================================
 // STATISTICS
-// --------------------------------------------
+// ============================================
 
 let statistics = {
 
@@ -338,58 +91,428 @@ let statistics = {
 };
 
 
-// Load statistics
+loadStatistics();
 
-const savedStats =
-    localStorage.getItem("wordBreakerStats");
 
-if (savedStats) {
+// ============================================
+// LOAD STATISTICS
+// ============================================
+
+function loadStatistics() {
+
+    const saved =
+        localStorage.getItem(
+            "wordBreakerStats"
+        );
+
+    if (!saved) {
+
+        updateStatistics();
+
+        return;
+
+    }
+
 
     try {
 
-        statistics = JSON.parse(savedStats);
+        const parsed =
+            JSON.parse(saved);
 
-    } catch {
+
+        if (
+            typeof parsed.played === "number" &&
+            typeof parsed.won === "number" &&
+            typeof parsed.streak === "number"
+        ) {
+
+            statistics = parsed;
+
+        }
+
+    }
+
+    catch {
 
         statistics = {
+
             played: 0,
+
             won: 0,
+
             streak: 0
+
         };
+
+    }
+
+
+    updateStatistics();
+
+}
+
+
+// ============================================
+// SAVE STATISTICS
+// ============================================
+
+function saveStatistics() {
+
+    localStorage.setItem(
+
+        "wordBreakerStats",
+
+        JSON.stringify(statistics)
+
+    );
+
+}
+
+
+// ============================================
+// UPDATE STATISTICS UI
+// ============================================
+
+function updateStatistics() {
+
+    gamesPlayedDisplay.textContent =
+        statistics.played;
+
+    gamesWonDisplay.textContent =
+        statistics.won;
+
+    streakDisplay.textContent =
+        statistics.streak;
+
+
+    let rate = 0;
+
+
+    if (statistics.played > 0) {
+
+        rate = Math.round(
+
+            (
+                statistics.won /
+                statistics.played
+            ) * 100
+
+        );
+
+    }
+
+
+    winRateDisplay.textContent =
+        rate + "%";
+
+}
+
+
+// ============================================
+// API REQUEST
+// ============================================
+
+async function getWords(length) {
+
+    const pattern =
+        "?".repeat(length);
+
+
+    const url =
+        `${API_URL}?sp=${encodeURIComponent(pattern)}&max=1000&md=f`;
+
+
+    const response =
+        await fetch(url);
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Datamuse request failed"
+        );
+
+    }
+
+
+    const data =
+        await response.json();
+
+
+    const words = [];
+
+
+    for (const item of data) {
+
+        if (!item.word) {
+
+            continue;
+
+        }
+
+
+        const word =
+            item.word
+                .trim()
+                .toLowerCase();
+
+
+        // Only pure alphabetic words
+
+        if (
+            !/^[a-z]+$/.test(word)
+        ) {
+
+            continue;
+
+        }
+
+
+        // Correct length
+
+        if (
+            word.length !== length
+        ) {
+
+            continue;
+
+        }
+
+
+        // Ignore obvious proper-looking
+        // or unusual entries
+
+        if (
+            word.includes("'") ||
+            word.includes("-")
+        ) {
+
+            continue;
+
+        }
+
+
+        words.push(word);
+
+    }
+
+
+    // Remove duplicates
+
+    return [...new Set(words)];
+
+}
+
+
+// ============================================
+// LOAD WORD DATABASE
+// ============================================
+
+async function loadWordDatabase() {
+
+    loading.style.display = "block";
+
+    gameBoard.innerHTML = "";
+
+    keyboard.innerHTML = "";
+
+    message.textContent =
+        "Loading English words...";
+
+
+    try {
+
+        // Check local cache first
+
+        const cached5 =
+            getCachedWords("words5");
+
+        const cached6 =
+            getCachedWords("words6");
+
+
+        if (
+            cached5 &&
+            cached5.length >= 100 &&
+            cached6 &&
+            cached6.length >= 100
+        ) {
+
+            words5 = cached5;
+
+            words6 = cached6;
+
+        }
+
+        else {
+
+            message.textContent =
+                "Downloading English words...";
+
+
+            const [five, six] =
+                await Promise.all([
+
+                    getWords(5),
+
+                    getWords(6)
+
+                ]);
+
+
+            words5 = five;
+
+            words6 = six;
+
+
+            cacheWords(
+                "words5",
+                words5
+            );
+
+            cacheWords(
+                "words6",
+                words6
+            );
+
+        }
+
+
+        loading.style.display = "none";
+
+        message.textContent = "";
+
+
+        startGame();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        loading.style.display = "none";
+
+
+        message.textContent =
+            "⚠️ Couldn't load the word database. Check your internet connection and try again.";
 
     }
 
 }
 
 
-// --------------------------------------------
+// ============================================
+// CACHE WORDS
+// ============================================
+
+function cacheWords(key, words) {
+
+    try {
+
+        localStorage.setItem(
+
+            key,
+
+            JSON.stringify(words)
+
+        );
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Could not cache words.",
+            error
+        );
+
+    }
+
+}
+
+
+// ============================================
+// GET CACHED WORDS
+// ============================================
+
+function getCachedWords(key) {
+
+    try {
+
+        const value =
+            localStorage.getItem(key);
+
+
+        if (!value) {
+
+            return null;
+
+        }
+
+
+        const words =
+            JSON.parse(value);
+
+
+        if (!Array.isArray(words)) {
+
+            return null;
+
+        }
+
+
+        return words;
+
+    }
+
+    catch {
+
+        return null;
+
+    }
+
+}
+
+
+// ============================================
 // START GAME
-// --------------------------------------------
+// ============================================
 
 function startGame() {
+
+    if (
+        words5.length === 0 ||
+        words6.length === 0
+    ) {
+
+        return;
+
+    }
+
 
     // Randomly choose 5 or 6 letters
 
     wordLength =
-        Math.random() < 0.5 ? 5 : 6;
+        Math.random() < 0.5
+            ? 5
+            : 6;
 
 
-    maxAttempts = wordLength;
+    maxAttempts =
+        wordLength;
 
 
-    // Select word list
+    const wordList =
+        wordLength === 5
+            ? words5
+            : words6;
 
-    const list =
-        wordLength === 5 ? words5 : words6;
-
-
-    // Pick random secret word
 
     secretWord =
-        list[Math.floor(Math.random() * list.length)];
+        chooseSecretWord(wordList);
 
-
-    // Reset game
 
     currentAttempt = 0;
 
@@ -398,76 +521,131 @@ function startGame() {
     gameOver = false;
 
 
-    // Update UI
-
     wordLengthDisplay.textContent =
         wordLength;
+
 
     chancesDisplay.textContent =
         maxAttempts;
 
+
     message.textContent = "";
 
 
-    // Build board
-
     createBoard();
 
-
-    // Build keyboard
-
     createKeyboard();
+
+
+    console.log(
+        "Secret word:",
+        secretWord
+    );
 
 }
 
 
-// --------------------------------------------
+// ============================================
+// CHOOSE SECRET WORD
+// ============================================
+
+function chooseSecretWord(list) {
+
+    if (!list.length) {
+
+        return "";
+
+    }
+
+
+    // Prefer the more common/top-ranked
+    // words returned by Datamuse.
+
+    // Most of the time select from
+    // the first 70%.
+
+    const top =
+        Math.max(
+            1,
+            Math.floor(list.length * 0.7)
+        );
+
+
+    const index =
+        Math.floor(
+            Math.random() * top
+        );
+
+
+    return list[index];
+
+}
+
+
+// ============================================
 // CREATE BOARD
-// --------------------------------------------
+// ============================================
 
 function createBoard() {
 
     gameBoard.innerHTML = "";
 
 
-    for (let row = 0; row < maxAttempts; row++) {
+    for (
+        let row = 0;
+        row < maxAttempts;
+        row++
+    ) {
 
         const rowElement =
             document.createElement("div");
+
 
         rowElement.className =
             "guess-row";
 
 
-        for (let column = 0;
-             column < wordLength;
-             column++) {
+        for (
+            let column = 0;
+            column < wordLength;
+            column++
+        ) {
 
             const tile =
                 document.createElement("div");
 
+
             tile.className =
                 "tile";
 
-            tile.dataset.row = row;
 
-            tile.dataset.column = column;
+            tile.dataset.row =
+                row;
 
-            rowElement.appendChild(tile);
+
+            tile.dataset.column =
+                column;
+
+
+            rowElement.appendChild(
+                tile
+            );
 
         }
 
 
-        gameBoard.appendChild(rowElement);
+        gameBoard.appendChild(
+            rowElement
+        );
 
     }
 
 }
 
 
-// --------------------------------------------
+// ============================================
 // CREATE KEYBOARD
-// --------------------------------------------
+// ============================================
 
 function createKeyboard() {
 
@@ -485,26 +663,38 @@ function createKeyboard() {
     ];
 
 
-    rows.forEach((row, index) => {
+    rows.forEach(row => {
 
         for (const letter of row) {
 
             const button =
                 document.createElement("button");
 
-            button.className = "key";
 
-            button.textContent = letter;
+            button.className =
+                "key";
+
+
+            button.textContent =
+                letter;
+
 
             button.dataset.letter =
                 letter.toLowerCase();
 
+
             button.addEventListener(
                 "click",
-                () => addLetter(letter.toLowerCase())
+                () =>
+                    addLetter(
+                        letter.toLowerCase()
+                    )
             );
 
-            keyboard.appendChild(button);
+
+            keyboard.appendChild(
+                button
+            );
 
         }
 
@@ -516,11 +706,14 @@ function createKeyboard() {
     const backspace =
         document.createElement("button");
 
+
     backspace.className =
         "key wide";
 
+
     backspace.textContent =
         "⌫";
+
 
     backspace.addEventListener(
         "click",
@@ -528,7 +721,9 @@ function createKeyboard() {
     );
 
 
-    keyboard.appendChild(backspace);
+    keyboard.appendChild(
+        backspace
+    );
 
 
     // Enter
@@ -536,11 +731,14 @@ function createKeyboard() {
     const enter =
         document.createElement("button");
 
+
     enter.className =
         "key wide";
 
+
     enter.textContent =
         "ENTER";
+
 
     enter.addEventListener(
         "click",
@@ -548,21 +746,30 @@ function createKeyboard() {
     );
 
 
-    keyboard.appendChild(enter);
+    keyboard.appendChild(
+        enter
+    );
 
 }
 
 
-// --------------------------------------------
+// ============================================
 // ADD LETTER
-// --------------------------------------------
+// ============================================
 
 function addLetter(letter) {
 
-    if (gameOver) return;
+    if (gameOver) {
+
+        return;
+
+    }
 
 
-    if (currentGuess.length >= wordLength) {
+    if (
+        currentGuess.length >=
+        wordLength
+    ) {
 
         return;
 
@@ -577,17 +784,24 @@ function addLetter(letter) {
 }
 
 
-// --------------------------------------------
+// ============================================
 // REMOVE LETTER
-// --------------------------------------------
+// ============================================
 
 function removeLetter() {
 
-    if (gameOver) return;
+    if (gameOver) {
+
+        return;
+
+    }
 
 
     currentGuess =
-        currentGuess.slice(0, -1);
+        currentGuess.slice(
+            0,
+            -1
+        );
 
 
     updateCurrentRow();
@@ -595,14 +809,23 @@ function removeLetter() {
 }
 
 
-// --------------------------------------------
+// ============================================
 // UPDATE CURRENT ROW
-// --------------------------------------------
+// ============================================
 
 function updateCurrentRow() {
 
     const row =
-        gameBoard.children[currentAttempt];
+        gameBoard.children[
+            currentAttempt
+        ];
+
+
+    if (!row) {
+
+        return;
+
+    }
 
 
     const tiles =
@@ -618,9 +841,15 @@ function updateCurrentRow() {
         tiles[i].textContent =
             currentGuess[i] || "";
 
+
         tiles[i].classList.toggle(
+
             "current",
-            Boolean(currentGuess[i])
+
+            Boolean(
+                currentGuess[i]
+            )
+
         );
 
     }
@@ -628,16 +857,69 @@ function updateCurrentRow() {
 }
 
 
-// --------------------------------------------
+// ============================================
+// VALIDATE WORD WITH DATAMUSE
+// ============================================
+
+async function isValidWord(word) {
+
+    const url =
+        `${API_URL}?sp=${encodeURIComponent(word)}&max=10`;
+
+
+    try {
+
+        const response =
+            await fetch(url);
+
+
+        if (!response.ok) {
+
+            return false;
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        return data.some(
+            item =>
+                typeof item.word === "string" &&
+                item.word.toLowerCase() === word
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        return false;
+
+    }
+
+}
+
+
+// ============================================
 // SUBMIT GUESS
-// --------------------------------------------
+// ============================================
 
-function submitGuess() {
+async function submitGuess() {
 
-    if (gameOver) return;
+    if (gameOver) {
+
+        return;
+
+    }
 
 
-    if (currentGuess.length !== wordLength) {
+    if (
+        currentGuess.length !==
+        wordLength
+    ) {
 
         showMessage(
             `Enter exactly ${wordLength} letters.`
@@ -648,19 +930,33 @@ function submitGuess() {
     }
 
 
-    const list =
-        wordLength === 5
-            ? words5
-            : words6;
+    const guess =
+        currentGuess;
 
 
-    // Check if word exists
+    // Temporarily disable keyboard
+    // while checking the API.
 
-    if (!list.includes(currentGuess)) {
+    setKeyboardEnabled(false);
+
+
+    showMessage(
+        "Checking word..."
+    );
+
+
+    const valid =
+        await isValidWord(guess);
+
+
+    if (!valid) {
 
         showMessage(
-            "That's not in my word list."
+            "❌ That's not a recognized English word."
         );
+
+
+        setKeyboardEnabled(true);
 
         return;
 
@@ -674,7 +970,8 @@ function submitGuess() {
 
 
     chancesDisplay.textContent =
-        maxAttempts - currentAttempt;
+        maxAttempts -
+        currentAttempt;
 
 
     currentGuess = "";
@@ -683,9 +980,7 @@ function submitGuess() {
     // Check win
 
     if (
-        gameBoard.children[currentAttempt - 1]
-            .querySelectorAll(".correct").length
-        === wordLength
+        isCurrentRowCorrect()
     ) {
 
         winGame();
@@ -697,23 +992,68 @@ function submitGuess() {
 
     // Check loss
 
-    if (currentAttempt >= maxAttempts) {
+    if (
+        currentAttempt >=
+        maxAttempts
+    ) {
 
         loseGame();
 
+        return;
+
     }
+
+
+    setKeyboardEnabled(true);
+
+    message.textContent = "";
 
 }
 
 
-// --------------------------------------------
+// ============================================
+// CHECK CURRENT ROW
+// ============================================
+
+function isCurrentRowCorrect() {
+
+    const row =
+        gameBoard.children[
+            currentAttempt - 1
+        ];
+
+
+    if (!row) {
+
+        return false;
+
+    }
+
+
+    const correctTiles =
+        row.querySelectorAll(
+            ".correct"
+        );
+
+
+    return (
+        correctTiles.length ===
+        wordLength
+    );
+
+}
+
+
+// ============================================
 // EVALUATE GUESS
-// --------------------------------------------
+// ============================================
 
 function evaluateGuess() {
 
     const row =
-        gameBoard.children[currentAttempt];
+        gameBoard.children[
+            currentAttempt
+        ];
 
 
     const tiles =
@@ -729,16 +1069,20 @@ function evaluateGuess() {
 
 
     const used =
-        new Array(wordLength).fill(false);
+        new Array(
+            wordLength
+        ).fill(false);
 
 
     const results =
-        new Array(wordLength).fill("absent");
+        new Array(
+            wordLength
+        ).fill("absent");
 
 
     // ----------------------------------------
-    // STEP 1
-    // Find exact matches
+    // FIRST PASS:
+    // Exact matches
     // ----------------------------------------
 
     for (
@@ -747,11 +1091,17 @@ function evaluateGuess() {
         i++
     ) {
 
-        if (guess[i] === answer[i]) {
+        if (
+            guess[i] ===
+            answer[i]
+        ) {
 
-            results[i] = "correct";
+            results[i] =
+                "correct";
 
-            used[i] = true;
+
+            used[i] =
+                true;
 
         }
 
@@ -759,8 +1109,8 @@ function evaluateGuess() {
 
 
     // ----------------------------------------
-    // STEP 2
-    // Find letters in wrong positions
+    // SECOND PASS:
+    // Wrong position
     // ----------------------------------------
 
     for (
@@ -769,7 +1119,10 @@ function evaluateGuess() {
         i++
     ) {
 
-        if (results[i] === "correct") {
+        if (
+            results[i] ===
+            "correct"
+        ) {
 
             continue;
 
@@ -784,12 +1137,17 @@ function evaluateGuess() {
 
             if (
                 !used[j] &&
-                guess[i] === answer[j]
+                guess[i] ===
+                answer[j]
             ) {
 
-                results[i] = "present";
+                results[i] =
+                    "present";
 
-                used[j] = true;
+
+                used[j] =
+                    true;
+
 
                 break;
 
@@ -801,7 +1159,7 @@ function evaluateGuess() {
 
 
     // ----------------------------------------
-    // Display results
+    // DISPLAY
     // ----------------------------------------
 
     for (
@@ -813,9 +1171,11 @@ function evaluateGuess() {
         tiles[i].textContent =
             guess[i].toUpperCase();
 
+
         tiles[i].classList.remove(
             "current"
         );
+
 
         tiles[i].classList.add(
             results[i]
@@ -823,8 +1183,6 @@ function evaluateGuess() {
 
     }
 
-
-    // Update keyboard
 
     updateKeyboard(
         guess,
@@ -834,9 +1192,9 @@ function evaluateGuess() {
 }
 
 
-// --------------------------------------------
-// UPDATE KEYBOARD
-// --------------------------------------------
+// ============================================
+// KEYBOARD STATUS
+// ============================================
 
 function updateKeyboard(
     guess,
@@ -852,25 +1210,32 @@ function updateKeyboard(
         const letter =
             guess[i];
 
+
         const key =
             document.querySelector(
                 `.key[data-letter="${letter}"]`
             );
 
 
-        if (!key) continue;
+        if (!key) {
+
+            continue;
+
+        }
 
 
-        // Correct is always strongest
+        // Correct is strongest
 
         if (
-            results[i] === "correct"
+            results[i] ===
+            "correct"
         ) {
 
             key.classList.remove(
                 "present",
                 "absent"
             );
+
 
             key.classList.add(
                 "correct"
@@ -880,30 +1245,46 @@ function updateKeyboard(
 
 
         else if (
-            results[i] === "present" &&
-            !key.classList.contains("correct")
+            results[i] ===
+            "present"
         ) {
 
-            key.classList.remove(
-                "absent"
-            );
+            if (
+                !key.classList.contains(
+                    "correct"
+                )
+            ) {
 
-            key.classList.add(
-                "present"
-            );
+                key.classList.remove(
+                    "absent"
+                );
+
+
+                key.classList.add(
+                    "present"
+                );
+
+            }
 
         }
 
 
-        else if (
-            results[i] === "absent" &&
-            !key.classList.contains("correct") &&
-            !key.classList.contains("present")
-        ) {
+        else {
 
-            key.classList.add(
-                "absent"
-            );
+            if (
+                !key.classList.contains(
+                    "correct"
+                ) &&
+                !key.classList.contains(
+                    "present"
+                )
+            ) {
+
+                key.classList.add(
+                    "absent"
+                );
+
+            }
 
         }
 
@@ -912,9 +1293,36 @@ function updateKeyboard(
 }
 
 
-// --------------------------------------------
-// WIN GAME
-// --------------------------------------------
+// ============================================
+// ENABLE / DISABLE KEYBOARD
+// ============================================
+
+function setKeyboardEnabled(
+    enabled
+) {
+
+    const buttons =
+        keyboard.querySelectorAll(
+            "button"
+        );
+
+
+    buttons.forEach(button => {
+
+        button.disabled =
+            !enabled;
+
+        button.style.opacity =
+            enabled ? "1" : "0.55";
+
+    });
+
+}
+
+
+// ============================================
+// WIN
+// ============================================
 
 function winGame() {
 
@@ -930,20 +1338,26 @@ function winGame() {
 
     saveStatistics();
 
+    updateStatistics();
 
-    showMessage(
-        `🎉 You cracked it! The word was ${secretWord.toUpperCase()}.`
+
+    setKeyboardEnabled(
+        false
     );
 
 
-    updateStatistics();
+    showMessage(
+
+        `🎉 Brilliant! The word was ${secretWord.toUpperCase()}.`
+
+    );
 
 }
 
 
-// --------------------------------------------
-// LOSE GAME
-// --------------------------------------------
+// ============================================
+// LOSE
+// ============================================
 
 function loseGame() {
 
@@ -957,119 +1371,49 @@ function loseGame() {
 
     saveStatistics();
 
+    updateStatistics();
 
-    showMessage(
-        `❌ Game over! The word was ${secretWord.toUpperCase()}.`
+
+    setKeyboardEnabled(
+        false
     );
 
 
-    updateStatistics();
+    showMessage(
+
+        `❌ Out of chances! The word was ${secretWord.toUpperCase()}.`
+
+    );
 
 }
 
 
-// --------------------------------------------
-// SHOW MESSAGE
-// --------------------------------------------
+// ============================================
+// MESSAGE
+// ============================================
 
 function showMessage(text) {
 
-    message.textContent = text;
+    message.textContent =
+        text;
 
 }
 
 
-// --------------------------------------------
-// SAVE STATISTICS
-// --------------------------------------------
-
-function saveStatistics() {
-
-    localStorage.setItem(
-        "wordBreakerStats",
-        JSON.stringify(statistics)
-    );
-
-}
-
-
-// --------------------------------------------
-// UPDATE STATISTICS
-// --------------------------------------------
-
-function updateStatistics() {
-
-    gamesPlayedDisplay.textContent =
-        statistics.played;
-
-
-    gamesWonDisplay.textContent =
-        statistics.won;
-
-
-    const rate =
-        statistics.played === 0
-            ? 0
-            : Math.round(
-                (statistics.won /
-                statistics.played) * 100
-            );
-
-
-    winRateDisplay.textContent =
-        rate + "%";
-
-
-    streakDisplay.textContent =
-        statistics.streak;
-
-}
-
-
-// --------------------------------------------
-// NEW GAME BUTTON
-// --------------------------------------------
+// ============================================
+// NEW GAME
+// ============================================
 
 newGameBtn.addEventListener(
     "click",
-    startGame
-);
+    () => {
 
-
-// --------------------------------------------
-// PHYSICAL KEYBOARD SUPPORT
-// --------------------------------------------
-
-document.addEventListener(
-    "keydown",
-    (event) => {
-
-        if (gameOver) return;
-
-
-        const key =
-            event.key.toLowerCase();
-
-
-        if (/^[a-z]$/.test(key)) {
-
-            addLetter(key);
-
-        }
-
-        else if (
-            event.key === "Backspace"
+        if (
+            words5.length &&
+            words6.length
         ) {
 
-            removeLetter();
-
-        }
-
-        else if (
-            event.key === "Enter"
-        ) {
-
-            submitGuess();
+            startGame();
 
         }
 
@@ -1077,10 +1421,12 @@ document.addEventListener(
 );
 
 
-// --------------------------------------------
-// INITIALIZE
-// --------------------------------------------
+// ============================================
+// PHYSICAL KEYBOARD
+// ============================================
 
-updateStatistics();
+document.addEventListener(
+    "keydown",
+    event => {
 
-startGame();
+     
