@@ -1,62 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
 
-    <title>Word Breaker</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Word Breaker - an analytical English word guessing game"
+    >
+
+    <title>🧠 Word Breaker</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="container">
+    <main class="container">
 
-        <h1>🧠 Word Breaker</h1>
+        <header>
+            <h1>🧠 Word Breaker</h1>
 
-        <p class="subtitle">
-            Crack the hidden English word
-        </p>
+            <p class="subtitle">
+                Crack the hidden English word
+            </p>
+        </header>
+
 
         <!-- Game information -->
 
-        <div class="info">
+        <section class="info">
 
             <div>
-                Word:
-                <strong id="wordLength">5</strong> letters
+                <span>Word</span>
+                <strong id="wordLength">5</strong>
+                <span>letters</span>
             </div>
 
             <div>
-                Chances:
+                <span>Chances</span>
                 <strong id="chances">5</strong>
             </div>
 
+        </section>
+
+
+        <!-- Loading -->
+
+        <div id="loading" class="loading">
+
+            <div class="spinner"></div>
+
+            <p>
+                Loading English words...
+            </p>
+
         </div>
+
 
         <!-- Game board -->
 
-        <div id="gameBoard"></div>
+        <section
+            id="gameBoard"
+            aria-label="Word guessing board"
+        ></section>
 
-        <!-- Keyboard -->
-
-        <div id="keyboard"></div>
 
         <!-- Message -->
 
-        <div id="message"></div>
+        <div
+            id="message"
+            role="status"
+            aria-live="polite"
+        ></div>
 
-        <!-- New game -->
 
-        <button id="newGameBtn">
-            New Game
+        <!-- Keyboard -->
+
+        <section
+            id="keyboard"
+            aria-label="Keyboard"
+        ></section>
+
+
+        <!-- New Game -->
+
+        <button
+            id="newGameBtn"
+            class="new-game"
+        >
+            🔄 New Game
         </button>
+
 
         <!-- Statistics -->
 
-        <div class="stats">
+        <section class="stats">
 
             <h2>📊 Statistics</h2>
 
@@ -84,11 +128,31 @@
 
             </div>
 
-        </div>
+        </section>
 
-    </div>
+
+        <!-- API information -->
+
+        <footer>
+
+            <small>
+                Word data powered by
+                <a
+                    href="https://www.datamuse.com/api/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Datamuse
+                </a>
+            </small>
+
+        </footer>
+
+    </main>
+
 
     <script src="script.js"></script>
 
 </body>
+
 </html>
